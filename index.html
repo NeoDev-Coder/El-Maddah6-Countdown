@@ -22,6 +22,24 @@
             min-height: 100vh;
         }
 
+        /* NEW: This is the style for your Main Big Title */
+        .main-title {
+            font-family: 'Creepster', cursive;
+            font-size: clamp(2.5rem, 8vw, 5rem); /* Adjusts size based on screen */
+            color: #8b0000;
+            text-align: center;
+            margin: 40px 0;
+            text-shadow: 0 0 20px #ff0000;
+            letter-spacing: 5px;
+            animation: pulse 3s infinite; /* Adds a glowing animation */
+        }
+
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px #ff0000; }
+            50% { text-shadow: 0 0 30px #ff0000, 0 0 40px #8b0000; }
+            100% { text-shadow: 0 0 10px #ff0000; }
+        }
+
         .container {
             width: 100%;
             max-width: 600px;
@@ -37,19 +55,19 @@
             text-align: center;
         }
 
-        h1 {
-            font-family: 'Creepster', cursive;
-            font-size: 2.2rem;
-            color: #8b0000;
+        .event-box h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: #d4af37;
             margin: 0 0 15px 0;
-            text-shadow: 0 0 10px #ff0000;
+            text-transform: uppercase;
         }
 
         .timer {
             display: flex;
             gap: 10px;
             justify-content: center;
-            flex-wrap: wrap; /* Keeps it from breaking on mobile */
+            flex-wrap: wrap;
         }
 
         .segment {
@@ -73,41 +91,41 @@
             text-transform: uppercase;
         }
 
-        /* Mobile specific font size adjustment */
         @media (max-width: 480px) {
-            h1 { font-size: 1.8rem; }
             .segment span { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="event-box">
-        <h1>First Episode</h1>
-        <div class="timer" id="timer1">
-            <div class="segment"><span class="d">00</span><div class="label">Days</div></div>
-            <div class="segment"><span class="h">00</span><div class="label">Hours</div></div>
-            <div class="segment"><span class="m">00</span><div class="label">Mins</div></div>
-            <div class="segment"><span class="s">00</span><div class="label">Secs</div></div>
-        </div>
-    </div>
+    <h1 class="main-title">El Maddah: The Legend Of The End</h1>
 
-    <div class="event-box">
-        <h1>New Song Release</h1>
-        <div class="timer" id="timer2">
-            <div class="segment"><span class="d">00</span><div class="label">Days</div></div>
-            <div class="segment"><span class="h">00</span><div class="label">Hours</div></div>
-            <div class="segment"><span class="m">00</span><div class="label">Mins</div></div>
-            <div class="segment"><span class="s">00</span><div class="label">Secs</span></div>
+    <div class="container">
+        <div class="event-box">
+            <h2>First Episode In:</h2>
+            <div class="timer" id="timer1">
+                <div class="segment"><span class="d">00</span><div class="label">Days</div></div>
+                <div class="segment"><span class="h">00</span><div class="label">Hours</div></div>
+                <div class="segment"><span class="m">00</span><div class="label">Mins</div></div>
+                <div class="segment"><span class="s">00</span><div class="label">Secs</div></div>
+            </div>
+        </div>
+
+        <div class="event-box">
+            <h2>New Song Releases In:</h2>
+            <div class="timer" id="timer2">
+                <div class="segment"><span class="d">00</span><div class="label">Days</div></div>
+                <div class="segment"><span class="h">00</span><div class="label">Hours</div></div>
+                <div class="segment"><span class="m">00</span><div class="label">Mins</div></div>
+                <div class="segment"><span class="s">00</span><div class="label">Secs</span></div>
+            </div>
         </div>
     </div>
-</div>
 
 <script>
     const countdowns = [
         { id: "timer1", target: "Feb 17, 2026 18:59:59" },
-        { id: "timer2", target: "Jan 30, 2026 18:30:00" }
+        { id: "timer2", target: "Jan 30, 2026 19:59:59" }
     ];
 
     function update() {
@@ -118,7 +136,7 @@
             const el = document.getElementById(item.id);
 
             if (gap <= 0) {
-                el.innerHTML = "<h2 style='color:#8b0000; font-family:Creepster;'>OUT NOW</h2>";
+                el.innerHTML = "<h2 style='color:#8b0000; font-family:Creepster; font-size:2rem;'>OUT NOW</h2>";
                 return;
             }
 
