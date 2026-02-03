@@ -22,16 +22,15 @@
             min-height: 100vh;
         }
 
-        /* NEW: This is the style for your Main Big Title */
         .main-title {
             font-family: 'Creepster', cursive;
-            font-size: clamp(2.5rem, 8vw, 5rem); /* Adjusts size based on screen */
+            font-size: clamp(2.5rem, 8vw, 5rem);
             color: #8b0000;
             text-align: center;
             margin: 40px 0;
             text-shadow: 0 0 20px #ff0000;
             letter-spacing: 5px;
-            animation: pulse 3s infinite; /* Adds a glowing animation */
+            animation: pulse 3s infinite;
         }
 
         @keyframes pulse {
@@ -91,6 +90,13 @@
             text-transform: uppercase;
         }
 
+        .coming-soon {
+            font-family: 'Creepster', cursive;
+            font-size: 1.8rem;
+            color: #666;
+            letter-spacing: 2px;
+        }
+
         @media (max-width: 480px) {
             .segment span { font-size: 1.5rem; }
         }
@@ -100,43 +106,66 @@
 
     <h1 class="main-title">El Maddah: The Legend Of The End</h1>
 
-    <div class="container">
-        <div class="event-box">
-            <h2>First Episode In:</h2>
-            <div class="timer" id="timer1">
-                <div class="segment"><span class="d">00</span><div class="label">Days</div></div>
-                <div class="segment"><span class="h">00</span><div class="label">Hours</div></div>
-                <div class="segment"><span class="m">00</span><div class="label">Mins</div></div>
-                <div class="segment"><span class="s">00</span><div class="label">Secs</div></div>
-            </div>
+    <div class="container" id="countdown-container">
         </div>
-
-        <div class="event-box">
-            <h2>New Song Releases In:</h2>
-            <div class="timer" id="timer2">
-                <div class="segment"><span class="d">00</span><div class="label">Days</div></div>
-                <div class="segment"><span class="h">00</span><div class="label">Hours</div></div>
-                <div class="segment"><span class="m">00</span><div class="label">Mins</div></div>
-                <div class="segment"><span class="s">00</span><div class="label">Secs</span></div>
-            </div>
-        </div>
-    </div>
 
 <script>
+    // Configuration for your countdowns
+    // All times are treated as Egypt Time (UTC+2)
     const countdowns = [
-        { id: "timer1", target: "Feb 17, 2026 18:59:59" },
-        { id: "timer2", target: "Jan 30, 2026 19:59:59" }
+        { title: "First Poster", target: "Feb 3, 2026 16:59:59" },
+        { title: "Second Poster", target: "Feb 3, 2026 17:59:59" },
+        { title: "First Promo", target: "Feb 3, 2026 18:59:59" },
+        { title: "Individual Posters", target: "Feb 4, 2026 16:59:59" },
+        { title: "Second Promo", target: "Coming Soon" },
+        { title: "First Promotional Song", target: "Coming Soon" },
+        { title: "First Episode", target: "Feb 17, 2026 18:59:59" }
     ];
 
+    const container = document.getElementById('countdown-container');
+
+    // Initial build of the HTML structures
+    countdowns.forEach((item, index) => {
+        const id = `timer-${index}`;
+        const box = document.createElement('div');
+        box.className = 'event-box';
+        
+        let timerContent = '';
+        if (item.target === "Coming Soon") {
+            timerContent = `<div class="coming-soon">COMING SOON</div>`;
+        } else {
+            timerContent = `
+                <div class="timer" id="${id}">
+                    <div class="segment"><span class="d">00</span><div class="label">Days</div></div>
+                    <div class="segment"><span class="h">00</span><div class="label">Hours</div></div>
+                    <div class="segment"><span class="m">00</span><div class="label">Mins</div></div>
+                    <div class="segment"><span class="s">00</span><div class="label">Secs</div></div>
+                </div>`;
+        }
+
+        box.innerHTML = `<h2>${item.title}</h2>${timerContent}`;
+        container.appendChild(box);
+        item.elementId = id;
+    });
+
     function update() {
-        const now = new Date().getTime();
+        // 1. Get current UTC time
+        const now = new Date();
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        
+        // 2. Convert current time to Egypt Time (UTC +2)
+        const egyptNow = new Date(utc + (3600000 * 2)).getTime();
 
         countdowns.forEach(item => {
-            const gap = new Date(item.target).getTime() - now;
-            const el = document.getElementById(item.id);
+            if (item.target === "Coming Soon") return;
+
+            const el = document.getElementById(item.elementId);
+            // 3. Treat the target string as an Egypt-local time
+            const targetTime = new Date(item.target).getTime();
+            const gap = targetTime - egyptNow;
 
             if (gap <= 0) {
-                el.innerHTML = "<h2 style='color:#8b0000; font-family:Creepster; font-size:2rem;'>OUT NOW</h2>";
+                el.innerHTML = "<h2 style='color:#8b0000; font-family:Creepster; font-size:2rem; margin:0;'>OUT NOW</h2>";
                 return;
             }
 
